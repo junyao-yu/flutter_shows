@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shows/ui/home/recommend_job.dart';
 import 'package:flutter_shows/ui/login/vcode.dart';
 import 'package:flutter_shows/ui/setting/invite.dart';
 import 'package:flutter_shows/ui/setting/setting.dart';
@@ -15,6 +16,7 @@ const HOME_ROUTE = '/routeHome';
 const WEBVIEW_ROUTE = '/routeWebview';
 const SETTING_ROUTE = '/routeSetting';
 const INVITE_ROUTE = '/routeInvite';
+const RECOMMEND_JOB_ROUTE = '/routeRecommendJob';
 
 final routes = {
   ROOT_ROUTE: (context, {arguments}) => GuidePage(),
@@ -22,9 +24,14 @@ final routes = {
   LOGIN_ROUTE: (context, {arguments}) => LoginPage(),
   VCODE_ROUTE: (context, {arguments}) => VcodePage(arguments: arguments),
   HOME_ROUTE: (context, {arguments}) => HomePage(),
-  WEBVIEW_ROUTE: (context, {arguments}) => WebViewpage(arguments: arguments,),
+  WEBVIEW_ROUTE: (context, {arguments}) => WebViewpage(
+        arguments: arguments,
+      ),
   SETTING_ROUTE: (context, {arguments}) => SettingPage(),
-  INVITE_ROUTE: (context, {arguments}) => InvitePage()
+  INVITE_ROUTE: (context, {arguments}) => InvitePage(),
+  RECOMMEND_JOB_ROUTE: (context, {arguments}) => RecommendJob(
+        arguments: arguments,
+      ),
 };
 
 RouteFactory onGenerateRoute = (settings) {

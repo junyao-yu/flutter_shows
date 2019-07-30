@@ -32,6 +32,7 @@ dependencies:
   fluttie: ^0.3.2
   flutter_webview_plugin: ^0.3.0+2
   package_info: ^0.4.0+2
+  pull_to_refresh: ^1.5.2
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,14 @@ flutter:
     - assets/images/bg_yhk_kong.png
     - assets/images/img_gth.png
     - assets/json/loading.json
+    - assets/images/bg_cyfw.png
+    - assets/images/bg_csls.png
+    - assets/images/bg_wlcc.png
+    - assets/images/bg_bcbz.png
+    - assets/images/bg_ksrz.png
+    - assets/images/bg_gxgz.png
+    - assets/images/bg_emtj.png
+    - assets/images/bg_jzgw.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,6 +4,7 @@ import 'package:flutter_shows/model/HomeListResponse.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:math';
 import 'package:flutter_shows/common/global.dart';
+import 'package:flutter_shows/views/popup_window.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -14,13 +15,15 @@ class _JobPageState extends State<JobPage> {
   double statusHeight;
   double screenWidth = 0;
   final ScrollController _scrollController = ScrollController();
+  GlobalKey _Key = GlobalKey();
+  GlobalKey _bodyKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _requestBanner();
     _requestHomeList();
-    _scrollController.addListener((){
+    _scrollController.addListener(() {
       print('offset----->${_scrollController.offset}');
     });
   }
@@ -69,6 +72,7 @@ class _JobPageState extends State<JobPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
+        key: _bodyKey,
         children: <Widget>[
           _searchBox(),
           Expanded(
@@ -189,6 +193,7 @@ class _JobPageState extends State<JobPage> {
 
   Widget _selectViews() {
     return Container(
+      key: _Key,
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
@@ -216,14 +221,40 @@ class _JobPageState extends State<JobPage> {
     );
   }
 
+  _showPopRecruitmen() {
+// 获取点击控件的坐标
+//    final RenderBox button = _Key.currentContext.findRenderObject();
+//    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+//    // 获得控件左下方的坐标
+//    var a =  button.localToGlobal(Offset(0.0, button.size.height + 12.0), ancestor: overlay);
+//    // 获得控件右下方的坐标
+//    var b =  button.localToGlobal(button.size.bottomLeft(Offset(0, 12.0)), ancestor: overlay);
+////    final RelativeRect position = RelativeRect.fromRect(
+////      Rect.fromPoints(a, b),
+////      Offset.zero & overlay.size,
+////    );
+    final RenderBox body = _bodyKey.currentContext.findRenderObject();
+    final RelativeRect position =
+        RelativeRect.fromLTRB(0, 130, screenWidth, body.size.height - 130);
+    showPopupWindow(
+        context: context,
+        fullWidth: true,
+        elevation: 0,
+        position: position,
+        child: PopUp1(height: body.size.height - 130));
+  }
+
   Widget _selectView(String type) {
     return Padding(
       padding: EdgeInsets.only(left: 8, right: 8),
       child: GestureDetector(
         onTap: () {
-          _scrollController.animateTo(240.0,
-              curve: Curves.ease,
-              duration: Duration(milliseconds: 400));
+//          _scrollController.animateTo(240.0,
+//              curve: Curves.ease,
+//              duration: Duration(milliseconds: 400));
+          _scrollController.jumpTo(240);
+
+          _showPopRecruitmen();
         },
         child: Container(
           height: double.infinity,
@@ -304,11 +335,69 @@ class _JobPageState extends State<JobPage> {
     );
   }
 
-  _cellClick(int type) {}
+  _cellClick(int type) {
+    switch (type) {
+      case 0:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '急招岗位',
+          'imgPath': 'bg_jzgw.png',
+          'urgency': 1
+        });
+        break;
+      case 1:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '超市零售',
+          'imgPath': 'bg_csls.png',
+          'category': 2
+        });
+        break;
+      case 2:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '物流仓储',
+          'imgPath': 'bg_wlcc.png',
+          'category': 5
+        });
+        break;
+      case 3:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '包吃包住',
+          'imgPath': 'bg_bcbz.png',
+          'accommodation': 1
+        });
+        break;
+      case 4:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '快速入职',
+          'imgPath': 'bg_ksrz.png',
+          'urgency': 1
+        });
+        break;
+      case 5:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '高薪工作',
+          'imgPath': 'bg_gxgz.png',
+          'high_salary': 1
+        });
+        break;
+      case 6:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE, arguments: {
+          'title': '餐饮服务',
+          'imgPath': 'bg_cyfw.png',
+          'category': 1
+        });
+        break;
+      case 7:
+        Navigator.pushNamed(context, RECOMMEND_JOB_ROUTE,
+            arguments: {'title': '热门推荐', 'imgPath': 'bg_emtj.png', 'hot': 1});
+        break;
+    }
+  }
 
   Widget _cellWidget(String title, String path, int type) {
     return GestureDetector(
-      onTap: _cellClick(type),
+      onTap: () {
+        _cellClick(type);
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -450,5 +539,174 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
+  }
+}
+
+class PopUp1 extends StatefulWidget {
+  final double height;
+
+  PopUp1({this.height});
+
+  @override
+  _PopUp1Page createState() => _PopUp1Page(height);
+}
+
+class _PopUp1Page extends State<PopUp1> {
+  final double height;
+
+  _PopUp1Page(this.height);
+
+  int _selectedIndex = -1;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        width: double.infinity,
+        height: height,
+        color: Color(0x50000000),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: 150,
+              color: Colors.white,
+            ),
+            Positioned(
+              child: Text(
+                '是否招聘',
+                style: TextStyle(color: Color(0xFF2b2b2b), fontSize: 13),
+              ),
+              left: 20,
+              top: 10,
+            ),
+            Positioned(
+              child: Wrap(
+                children: <Widget>[
+                  ChoiceChip(
+                    elevation: 0,
+                    label: Text('急招',
+                        style:
+                            TextStyle(fontSize: 13, color: Color(0xFF2B2B2B))),
+                    labelStyle: TextStyle(
+                        color: _selectedIndex == 0
+                            ? Color(0xFFEA4C56)
+                            : Color(0xFF2b2b2b)),
+                    selected: _selectedIndex == 0,
+                    selectedColor: Color(0xFFFFC5C8),
+                    backgroundColor: Color(0xFFF3F3F3),
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (_selectedIndex == 0) {
+                          _selectedIndex = -1;
+                        } else {
+                          _selectedIndex = 0;
+                        }
+                      });
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding:
+                        EdgeInsets.only(left: 24, right: 24, top: 7, bottom: 7),
+                  ),
+                  SizedBox(
+                    width: 14,
+                  ),
+                  ChoiceChip(
+                    elevation: 0,
+                    label: Text(
+                      '非急招',
+                      style: TextStyle(fontSize: 13, color: Color(0xFF2B2B2B)),
+                    ),
+                    labelStyle: TextStyle(
+                        color: _selectedIndex == 1
+                            ? Color(0xFFEA4C56)
+                            : Color(0xFF2b2b2b)),
+                    selected: _selectedIndex == 1,
+                    selectedColor: Color(0xFFFFC5C8),
+                    backgroundColor: Color(0xFFF3F3F3),
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (_selectedIndex == 1) {
+                          _selectedIndex = -1;
+                        } else {
+                          _selectedIndex = 1;
+                        }
+                      });
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding:
+                        EdgeInsets.only(left: 18, right: 18, top: 7, bottom: 7),
+                  )
+                ],
+              ),
+              left: 20,
+              top: 35,
+            ),
+            Positioned(
+              child: Container(
+                width: double.infinity,
+                height: 40,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          height: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(100.0),
+                              border: Border.all(
+                                  color: Color(0xFFbcbcbc),
+                                  width: 1,
+                                  style: BorderStyle.solid)),
+                          child: Text(
+                            '重置',
+                            style: TextStyle(
+                                fontSize: 15, color: Color(0xff696969)),
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    SizedBox(
+                      width: 17,
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          height: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Color(0xFFEA4C56),
+                              borderRadius: BorderRadius.circular(100.0)),
+                          child: Text(
+                            '确定',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    )
+                  ],
+                ),
+              ),
+              left: 20,
+              right: 20,
+              top: 90,
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
