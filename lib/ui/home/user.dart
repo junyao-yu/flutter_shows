@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shows/model/UserInfo.dart';
+import 'package:flutter_shows/base/base_bean.dart';
 import 'package:flutter_shows/common/global.dart';
-import 'package:flutter_shows/ui/custom/popup.dart';
+import 'package:flutter_shows/model/temp_login.dart';
+import 'package:flutter_shows/base/base_state.dart';
+import 'package:flutter_shows/ui/home/user_presenter.dart';
 
 class UserPage extends StatefulWidget {
   @override
   _UserPageState createState() => _UserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserPageState extends BasePageSate<UserPage, UserPresenter> {
   double screenWidth;
   double statusHeight;
   String headUrl = "";
@@ -330,18 +332,61 @@ class _UserPageState extends State<UserPage> {
 //  }
 
   void _requestUserInfo() {
-    CommonRequest.requestUserInfo().then((result) {
-      UserInfo userInfo = UserInfo.fromJson(result);
+//    NetWrapper.init().request<UserInfo>(Url.userInfo).then((userInfo) {
+//         setState(() {
+//           headUrl = userInfo.header_url;
+//           name = userInfo.name;
+//           wordAge = userInfo.work_age;
+//           nextLevelConfition = userInfo.next_level_condition;
+//           percentage = userInfo.percentage;
+//           levelStatus = userInfo.level_status;
+//           nextLevelName = userInfo.next_level_name;
+//         });
+//    });
+
+//    NetWrapper.init().requestTemp<TempLogin>(Url.userInfo).then((userInfo) {
+//        if (userInfo is TempLogin) {
+//                   setState(() {
+//           headUrl = userInfo.data.header_url;
+//           name = userInfo.data.name;
+//           wordAge = userInfo.data.work_age;
+//           nextLevelConfition = userInfo.data.next_level_condition;
+//           percentage = userInfo.data.percentage;
+//           levelStatus = userInfo.data.level_status;
+//           nextLevelName = userInfo.data.next_level_name;
+//         });
+//        }
+//    });
+
+    mPresenter?.requestUserInfo<TempLogin>();
+
+    // CommonRequest.requestUserInfo().then((result) {
+    //   UserInfo userInfo = UserInfo.fromJson(result);
+    //   setState(() {
+    //     headUrl = userInfo.data.header_url;
+    //     name = userInfo.data.name;
+    //     wordAge = userInfo.data.work_age;
+    //     nextLevelConfition = userInfo.data.next_level_condition;
+    //     percentage = userInfo.data.percentage;
+    //     levelStatus = userInfo.data.level_status;
+    //     nextLevelName = userInfo.data.next_level_name;
+    //   });
+    // });
+  }
+
+  @override
+  showSuccess(BaseBean response) {
+    if (response is TempLogin) {
       setState(() {
-        headUrl = userInfo.data.header_url;
-        name = userInfo.data.name;
-        wordAge = userInfo.data.work_age;
-        nextLevelConfition = userInfo.data.next_level_condition;
-        percentage = userInfo.data.percentage;
-        levelStatus = userInfo.data.level_status;
-        nextLevelName = userInfo.data.next_level_name;
+        headUrl = response.data.header_url;
+        name = response.data.name;
+        wordAge = response.data.work_age;
+        nextLevelConfition = response.data.next_level_condition;
+        percentage = response.data.percentage;
+        levelStatus = response.data.level_status;
+        nextLevelName = response.data.next_level_name;
       });
-    });
+    }
   }
 
   String _wrapperName() {
@@ -396,6 +441,11 @@ class _UserPageState extends State<UserPage> {
         ],
       ),
     );
+  }
+
+  @override
+  UserPresenter createPresenter() {
+    return UserPresenter();
   }
 }
 

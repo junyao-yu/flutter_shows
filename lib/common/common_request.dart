@@ -1,11 +1,12 @@
+import 'package:flutter_shows/model/UserInfo.dart';
 import 'package:flutter_shows/net/net.dart';
 
 import 'common.dart';
 
 class CommonRequest {
-  static requestUserInfo(
-          {Map<String, dynamic> params = const {}, String method = GET}) =>
-      NetWrapper.init().request(Url.userInfo, params: params, method: method);
+//  static Future<T> requestUserInfo<T>(
+//          {Map<String, dynamic> params = const {}, String method = GET}) =>
+//      NetWrapper.init().request<UserInfo>(Url.userInfo, params: params, method: method);
 
   static requestCaptcha(
           {Map<String, dynamic> params = const {}, String method = GET}) =>
